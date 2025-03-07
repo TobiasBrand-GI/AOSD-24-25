@@ -19,11 +19,11 @@ prep_data <- function() {
   st_write(shape_data, "./src/randomized/Rheda_Wiedebrueck_EFHZFH_Faelle.shp",delete_layer = T, append=FALSE)
 }
 
+# Calculation of the annual mean prices
 calculate_year_mean <- function() {
   
   shapefile_path <- "./src/randomized/Rheda_Wiedebrueck_EFHZFH_Faelle.shp"
   shape_data <- st_read(shapefile_path)
-  #shape_data$year <- year(as.Date(shape_data$datu, format="%d.%m.%Y")) 
   
   year_avg <- shape_data %>%
     group_by(year)%>%
@@ -43,11 +43,11 @@ calculate_year_mean <- function() {
   return(df)
 }
 
+# Calculation of the annual median prices
 calculate_year_median <- function() {
   
   shapefile_path <- "./src/randomized/Rheda_Wiedebrueck_EFHZFH_Faelle.shp"
   shape_data <- st_read(shapefile_path)
-  #shape_data$year <- year(as.Date(shape_data$datu, format="%d.%m.%Y")) 
   
   year_avg <- shape_data %>%
     group_by(year)%>%
@@ -131,7 +131,7 @@ generate_copula <- function(col1, col2, district){
   
   sel <- BiCopSelect(rtData[,1], rtData[,2])
   cop_sel<-VC2copula::BiCop2copula(sel$family, sel$par, sel$par2) # -> t
-  return(persp(cop_sel, dCopula, col="lightgray",border="#b31e3b", zlab="", xlab="", ylab=""))
+  return(persp(cop_sel, dCopula, col="#06416b",border="lightgray", zlab="", xlab="", ylab=""))
 }
 
 fit_regression_model <- function(){
@@ -140,7 +140,7 @@ fit_regression_model <- function(){
   shape_data <- st_read(shapefile_path)
   
   # fit regression model based on "Gutachterausschuss für Grundstückswerte im Kreis Gütersloh"
-  modell <- lm(prei~flac+bauj+stst+year+wofl+adjstd_, data = shape_data)
+  modell <- lm(prei~flac+bauj+stst+year+wofl, data = shape_data)
   
   print(summary(modell))
   
